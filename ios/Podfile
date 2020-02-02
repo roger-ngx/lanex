@@ -78,6 +78,11 @@ target 'languageexchange' do
     :podspec => "../node_modules/react-native/third-party-podspecs/glog.podspec",
     :inhibit_warnings => true
 
+  use_native_modules!
+
+  pod 'RNFBApp', :path => '../node_modules/@react-native-firebase/app'
+  pod 'RNFBAuth', :path => '../node_modules/@react-native-firebase/auth'
+  pod 'RNFBFirestore', :path => '../node_modules/@react-native-firebase/firestore'
 
   post_install do |installer|
     installer.pods_project.main_group.tab_width = '2';

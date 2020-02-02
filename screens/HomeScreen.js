@@ -11,8 +11,11 @@ import {
 } from 'react-native';
 
 import { MonoText } from '../components/StyledText';
+import { inject } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 
-export default function HomeScreen() {
+function HomeScreen({AppStore}) {
+  AppStore.testFirestore();
   return (
     <View style={styles.container}>
       <ScrollView
@@ -32,7 +35,7 @@ export default function HomeScreen() {
         <View style={styles.getStartedContainer}>
           <DevelopmentModeNotice />
 
-          <Text style={styles.getStartedText}>Get started by opening</Text>
+          <Text style={styles.getStartedText}>{AppStore.appGreeting}</Text>
 
           <View
             style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
@@ -72,6 +75,8 @@ export default function HomeScreen() {
 HomeScreen.navigationOptions = {
   header: null,
 };
+
+export default inject('AppStore')(observer(HomeScreen))
 
 function DevelopmentModeNotice() {
   if (__DEV__) {
