@@ -9,65 +9,26 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 
 import { MonoText } from '../components/StyledText';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 
 function HomeScreen({AppStore}) {
-  AppStore.testFirestore();
+  AppStore.loginWithFacebook();
   return (
     <View style={styles.container}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}>
-        <View style={styles.welcomeContainer}>
-          <Image
-            source={
-              __DEV__
-                ? require('../assets/images/robot-dev.png')
-                : require('../assets/images/robot-prod.png')
-            }
-            style={styles.welcomeImage}
-          />
-        </View>
-
-        <View style={styles.getStartedContainer}>
-          <DevelopmentModeNotice />
-
-          <Text style={styles.getStartedText}>{AppStore.appGreeting}</Text>
-
-          <View
-            style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-            <MonoText>screens/HomeScreen.js</MonoText>
-          </View>
-
-          <Text style={styles.getStartedText}>
-            Change this text and your app will automatically reload.
-          </Text>
-        </View>
-
-        <View style={styles.helpContainer}>
-          <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-            <Text style={styles.helpLinkText}>
-              Help, it didn’t automatically reload!
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-
-      <View style={styles.tabBarInfoContainer}>
-        <Text style={styles.tabBarInfoText}>
-          This is a tab bar. You can edit it in:
-        </Text>
-
-        <View
-          style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-          <MonoText style={styles.codeHighlightText}>
-            navigation/MainTabNavigator.js
-          </MonoText>
-        </View>
-      </View>
+      <MapView
+        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+        style={styles.map}
+        region={{
+          latitude: 37.78825,
+          longitude: -122.4324,
+          latitudeDelta: 0.015,
+          longitudeDelta: 0.0121,
+        }}
+      />
     </View>
   );
 }
@@ -118,6 +79,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  map: {
+    flex: 1
+  },  
   developmentModeText: {
     marginBottom: 20,
     color: 'rgba(0,0,0,0.4)',
