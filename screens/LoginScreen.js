@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
 import { GoogleSignin, GoogleSigninButton } from '@react-native-community/google-signin';
 import { LoginButton, AccessToken } from 'react-native-fbsdk';
 
 const LoginScreen = () => {
+    const [ isSigninInProgress, setIsSignInProgress ] = useState(false);
+
+    signIn = () => {
+
+    };
 
     return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <LoginButton
@@ -28,8 +33,8 @@ const LoginScreen = () => {
             style={{ width: 192, height: 48 }}
             size={GoogleSigninButton.Size.Wide}
             color={GoogleSigninButton.Color.Dark}
-            onPress={this._signIn}
-            disabled={this.state.isSigninInProgress}
+            onPress={signIn}
+            disabled={isSigninInProgress}
         />
     </View>
 }

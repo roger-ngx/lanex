@@ -1,0 +1,6 @@
+module ExpoKit {
+  umbrella header "ExpoKit-umbrella.h"
+
+  export *
+  module * { export * }
+}

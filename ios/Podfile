@@ -65,24 +65,32 @@ target 'languageexchange' do
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
   
+  pod 'BoringSSL-GRPC', '= 0.0.3', :modular_headers => false
+  pod 'gRPC-Core', '= 1.21.0', :modular_headers => false
+
   pod 'Yoga',
     :path => "../node_modules/react-native/ReactCommon/yoga",
     :inhibit_warnings => true
   pod 'DoubleConversion',
     :podspec => "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec",
     :inhibit_warnings => true
-  pod 'Folly',
-    :podspec => "../node_modules/react-native/third-party-podspecs/Folly.podspec",
-    :inhibit_warnings => true
-  pod 'glog',
-    :podspec => "../node_modules/react-native/third-party-podspecs/glog.podspec",
-    :inhibit_warnings => true
 
-  use_native_modules!
+  # https://github.com/facebook/react-native/issues/26217
+  pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec', :modular_headers => false
+  pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec', :modular_headers => false
+  
+  # https://github.com/react-native-community/lottie-react-native/issues/511
+  # use_native_modules!
+  use_modular_headers!
+  # use_frameworks! :linkage => :static
 
   pod 'RNFBApp', :path => '../node_modules/@react-native-firebase/app'
   pod 'RNFBAuth', :path => '../node_modules/@react-native-firebase/auth'
   pod 'RNFBFirestore', :path => '../node_modules/@react-native-firebase/firestore'
+
+  pod 'RNGoogleSignin', :path => '../node_modules/@react-native-community/google-signin'
+
+  pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
 
   post_install do |installer|
     installer.pods_project.main_group.tab_width = '2';

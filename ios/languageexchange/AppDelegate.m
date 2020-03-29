@@ -1,8 +1,9 @@
 // Copyright 2015-present 650 Industries. All rights reserved.
 
 #import "AppDelegate.h"
-
+#import <GoogleMaps/GoogleMaps.h>
 #import <Firebase.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 
 @implementation AppDelegate
@@ -10,6 +11,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   [FIRApp configure];
+  [GMSServices provideAPIKey:@"AIzaSyDgHI-Mt7JkX5l3M4sIPhw58J1kSMWFUUA"];
+
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
@@ -29,7 +32,12 @@
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-  return [super application:app openURL:url options:options];
+    if ([[FBSDKApplicationDelegate sharedInstance] application:app openURL:url options:options])
+    {
+      return YES;
+    }
+    
+    return [super application:app openURL:url options:options];
 }
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
@@ -37,7 +45,7 @@
   return [super application:application continueUserActivity:userActivity restorationHandler:restorationHandler];
 }
 
-#pragma mark - Notifications
+#pragma mark - Notifications1234
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)token
 {
