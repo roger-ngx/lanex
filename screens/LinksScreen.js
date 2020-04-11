@@ -1,40 +1,69 @@
 import React, { useState } from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
-import { map } from 'lodash';
+import { View, StyleSheet, Image, Text, ScrollView } from 'react-native';
+import { includes, map, remove } from 'lodash';
 
-import languages from 'constants/Languages';
+import { languages } from 'constants/Languages';
 import Tag from '../components/Tag';
 import { TouchableOpacity } from 'react-native';
 
 export default function LinksScreen() {
   const [selectedLangs, setSelectedLangs ] = useState([]);
 
-  onSelectedLang = lang => setSelectedLangs([...selectedLangs, lang]);
+  onSelectedLang = lang => {
+    if(includes(selectedLangs, lang)){
+      remove(selectedLangs, l => l === lang);
+    }else{
+      selectedLangs.push(lang);
+    }
+    setSelectedLangs([...selectedLangs]);
+  };
 
-  renderItem = ({item}) => (
+  onRemoveLang = lang => {
+    remove(selectedLangs, l => l === lang);
+    setSelectedLangs([...selectedLangs]);
+  };
+
+  renderItem = language => (
     <TouchableOpacity
-      onPress={onSelectedLang.bind(null, item)}
+      onPress={onSelectedLang.bind(null, language.name)}
+      style={{
+        width: '30%',
+        backgroundColor: includes(selectedLangs, language.name) ? '#5e4ee0' : '#e9e9e9',
+        margin: 5,
+        padding: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5
+      }}
     >
-      <View style={{padding: 10, justifyContent: 'center'}}>
-        <Text>{item}</Text>
-      </View>
+      <Image style={{width: 70, height: 50, marginBottom: 12}} resizeMode='cover' source={language.icon} />
+      <Text
+        style={{
+          color: includes(selectedLangs, language.name) ? 'white' : '#333'
+        }}
+      >
+        {language.name}
+      </Text>
     </TouchableOpacity>
   )
 
   return (
-    <>
-      <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+    <View style={{flex: 1}}>
+      <View style={{flexDirection: 'row', flexWrap: 'wrap', padding: 10}}>
         {
           map(selectedLangs, lang => (
-            <Tag text={lang} />
+            <Tag text={lang} onClose={() => onRemoveLang(lang)}/>
           ))
         }
       </View>
-      <FlatList
-          items={languages}
-          renderItem={renderItem}
-      />
-    </>
+      <ScrollView style={{flex: 1}}>
+        <View style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap'}}>
+          {
+            map(languages, renderItem)
+          }
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 

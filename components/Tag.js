@@ -8,19 +8,23 @@ const Tag = ({text, onClose}) => {
         <TouchableOpacity
             style={{
                 backgroundColor: 'green',
-                borderRadius: 10,
+                borderRadius: 20,
                 padding: 5,
+                margin: 5,
                 borderWidth: 1,
-                borderColor: 'grey'
+                borderColor: 'grey',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexDirection: 'row',
+                paddingHorizontal: 10
             }}
             onPress={onClose}
         >
-            <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-                <Text>{text}</Text>
-                <Icon
-                    name='close'
-                />
-            </View>
+            <Text style={{color: 'white', marginRight: 5}}>{text}</Text>
+            <Icon
+                name='close'
+                color='white'
+            />
         </TouchableOpacity>
     )
 }
