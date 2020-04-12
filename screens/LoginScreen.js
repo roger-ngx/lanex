@@ -4,6 +4,7 @@ import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-com
 import { LoginButton, AccessToken,  GraphRequest, GraphRequestManager} from 'react-native-fbsdk';
 import AsyncStorage from '@react-native-community/async-storage';
 import { login } from 'services/LoginService';
+import UserStore from '../stores/UserStore';
 
 GoogleSignin.configure({
     webClientId: '75262550263-6ne1rfsalhpnrqsps6938ubguimjbl73.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
@@ -95,7 +96,8 @@ const LoginScreen = ({navigation}) => {
                                 console.log(error, result);
 
                                 if(!error && result){
-                                    login(result);
+                                    // login(result);
+                                    UserStore.setCurrentUser(result);
                                 }
                             }
                         )

@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Image, Text, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { includes, map, remove } from 'lodash';
+import { observer } from 'mobx-react-lite';
+import { inject } from 'mobx-react';
 
 import { languages } from 'constants/Languages';
 import Tag from '../components/Tag';
-import { TouchableOpacity } from 'react-native';
+import BottomModal from '../components/BottomModal';
 
-export default function LinksScreen() {
+const  LinksScreen = ({UserStore, navigation}) => {
   const [selectedLangs, setSelectedLangs ] = useState([]);
+  const [isShowSelectLangsModal, setShowSelectLangsModal ] = useState(false);
 
   onSelectedLang = lang => {
     if(includes(selectedLangs, lang)){
@@ -25,6 +28,7 @@ export default function LinksScreen() {
 
   renderItem = language => (
     <TouchableOpacity
+      key={language.name}
       onPress={onSelectedLang.bind(null, language.name)}
       style={{
         width: '30%',
@@ -49,20 +53,55 @@ export default function LinksScreen() {
 
   return (
     <View style={{flex: 1}}>
-      <View style={{flexDirection: 'row', flexWrap: 'wrap', padding: 10}}>
-        {
-          map(selectedLangs, lang => (
-            <Tag text={lang} onClose={() => onRemoveLang(lang)}/>
-          ))
-        }
-      </View>
-      <ScrollView style={{flex: 1}}>
-        <View style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap'}}>
+      <View style={{flex: 1}}>
+        <TouchableOpacity
+          style={{padding: 15}}
+          onPress={() => setShowSelectLangsModal(true)}
+        >
+          <Text>Your speaking languages</Text>
+        </TouchableOpacity>
+        <View style={{flexDirection: 'row', flexWrap: 'wrap', padding: 10}}>
           {
-            map(languages, renderItem)
+            map(selectedLangs, lang => (
+              <Tag text={lang} onClose={() => onRemoveLang(lang)}/>
+            ))
           }
         </View>
-      </ScrollView>
+      </View>
+
+      <TouchableOpacity
+        onPress={() => {
+          UserStore.setUserSpeakingLanguages(selectedLangs);
+          navigation.navigate('Records');
+        }}
+        style={{
+          justifyContent: 'center',
+          backgroundColor: '#5e40e0',
+          alignItems: 'center',
+          padding: 20
+        }}
+      >
+        <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18}}>Next</Text>
+      </TouchableOpacity>
+      
+      <BottomModal
+        style={{flex: 1, margin: 0, justifyContent: 'flex-end'}}
+        isVisible={isShowSelectLangsModal}
+        onBackdropPress={() => setShowSelectLangsModal(false)}
+      >
+        <View style={{backgroundColor: 'white'}}>
+          <View>
+            <Text>Select languages</Text>
+          </View>
+          <ScrollView>
+            <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+              {
+                map(languages, renderItem)
+              }
+            </View>
+          </ScrollView>
+        </View>
+      </BottomModal>
     </View>
   );
 }
@@ -78,3 +117,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 });
+
+export default inject('UserStore')(observer(LinksScreen))

@@ -8,6 +8,7 @@ import { Provider } from 'mobx-react';
 
 import AppNavigator from './navigation/AppNavigator';
 import AppStore from './stores/AppStore';
+import UserStore from './stores/UserStore';
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
@@ -22,7 +23,7 @@ export default function App(props) {
     );
   } else {
     return (
-      <Provider AppStore={AppStore}>
+      <Provider AppStore={AppStore} UserStore={UserStore}>
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
           <AppNavigator />
