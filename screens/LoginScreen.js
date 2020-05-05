@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View } from 'react-native';
+import { View, TouchableOpacity, Text } from 'react-native';
+import { inject } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-community/google-signin';
 import { LoginButton, AccessToken,  GraphRequest, GraphRequestManager} from 'react-native-fbsdk';
 import AsyncStorage from '@react-native-community/async-storage';
-import { login } from 'services/LoginService';
+import { loginWithFacebook, loginWithGoogle } from 'services/LoginService';
 import UserStore from '../stores/UserStore';
+import StorybookUIRoot from '../storybook';
+import { Icon } from 'react-native-elements';
 
 GoogleSignin.configure({
     webClientId: '75262550263-6ne1rfsalhpnrqsps6938ubguimjbl73.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
@@ -16,17 +20,16 @@ GoogleSignin.configure({
     iosClientId: '75262550263-dtv9kr2irdr72l43vm48kn555vkb0nir.apps.googleusercontent.com', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
 });
 
-const LoginScreen = ({navigation}) => {
+const LoginScreen = ({AppStore, navigation}) => {
     const [ isSigninInProgress, setIsSignInProgress ] = useState(false);
 
     useEffect(() => {
-        const token = AsyncStorage.getItem('@AccessToken');
-        if(token){
-            facebookGraphRequest(token);
-        }
+        // AsyncStorage.getItem('@AccessToken').then(facebookGraphRequest);
     }, []);
 
     facebookGraphRequest = (token) => {
+        if(!token) return;
+
         const infoRequest = new GraphRequest(
             '/me',
             {
@@ -34,7 +37,7 @@ const LoginScreen = ({navigation}) => {
                 parameters: {
                     //https://developers.facebook.com/docs/graph-api/reference/user
                     fields: {
-                        string: 'id, email, name, gender, birthday, picture.type(large) '
+                        string: 'id, email, name, gender, birthday, picture.type(large)'
                     }
                 }
             },
@@ -42,8 +45,8 @@ const LoginScreen = ({navigation}) => {
                 console.log(error, result);
 
                 if(!error && result){
-                    login(result);
-                    navigation.navigate('Home');
+                    login(token);
+                    // navigation.navigate('Home');
                 }
             }
         );
@@ -71,7 +74,8 @@ const LoginScreen = ({navigation}) => {
       };
 
     return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <LoginButton
+        {/* <StorybookUIRoot /> */}
+        {/* <LoginButton
             onLoginFinished={
                 async (error, result) => {
                     if (error) {
@@ -96,8 +100,9 @@ const LoginScreen = ({navigation}) => {
                                 console.log(error, result);
 
                                 if(!error && result){
-                                    // login(result);
+                                    login(result);
                                     UserStore.setCurrentUser(result);
+                                    navigation.navigate('Home');
                                 }
                             }
                         )
@@ -109,15 +114,79 @@ const LoginScreen = ({navigation}) => {
                 }
             }
             onLogoutFinished={() => console.log("logout.")}
-        />
-        <GoogleSigninButton
+        /> */}
+        {/* <GoogleSigninButton
             style={{ width: 192, height: 48 }}
             size={GoogleSigninButton.Size.Wide}
             color={GoogleSigninButton.Color.Dark}
             onPress={signIn}
             disabled={isSigninInProgress}
-        />
+        /> */}
+        <TouchableOpacity
+            style={{
+                width: '80%',
+                padding: 17,
+                flexDirection: 'row',
+                backgroundColor: '#574ee0',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderRadius: 5,
+                margin: 10
+            }}
+            onPress={() => loginWithFacebook().then((error) => !error && navigation.navigate('Home'))}
+        >
+            <Icon
+                type='font-awesome'
+                name='facebook'
+                color='white'
+            />
+
+            <Text
+                style={{
+                    flex: 1,
+                    textAlign: 'center',
+                    fontSize: 20,
+                    color: 'white',
+                    fontWeight: 'bold'
+                }}
+            >
+                Facebook Login
+            </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+            style={{
+                width: '80%',
+                padding: 15,
+                flexDirection: 'row',
+                backgroundColor: 'white',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderRadius: 5,
+                margin: 10,
+                borderWidth: 2,
+                borderColor: '#574ee0'
+            }}
+            onPress={() => loginWithGoogle().then((error) => !error && navigation.navigate('Home'))}
+        >
+            <Icon
+                type='font-awesome'
+                name='google'
+                color='#574ee0'
+            />
+            <Text
+                style={{
+                    flex: 1,
+                    textAlign: 'center',
+                    fontSize: 20,
+                    color: '#574ee0',
+                    fontWeight: 'bold'
+                }}
+            >
+                Google Login
+            </Text>
+        </TouchableOpacity>
     </View>
 }
 
-export default LoginScreen;
+export default inject('AppStore')(observer(LoginScreen));

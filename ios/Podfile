@@ -87,11 +87,10 @@ target 'languageexchange' do
   pod 'RNFBApp', :path => '../node_modules/@react-native-firebase/app'
   pod 'RNFBAuth', :path => '../node_modules/@react-native-firebase/auth'
   pod 'RNFBFirestore', :path => '../node_modules/@react-native-firebase/firestore'
+  pod 'RNFBStorage', :path => '../node_modules/@react-native-firebase/storage'
 
   pod 'RNGoogleSignin', :path => '../node_modules/@react-native-community/google-signin'
-
   pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
-
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
   post_install do |installer|

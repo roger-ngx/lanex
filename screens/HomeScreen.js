@@ -11,12 +11,10 @@ import {
 } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 
-import { MonoText } from '../components/StyledText';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 
-function HomeScreen({AppStore}) {
-  AppStore.loginWithFacebook();
+function HomeScreen() {
   return (
     <View style={styles.container}>
       <MapView
